@@ -4,17 +4,17 @@ import sched, time, json
 import threading
 import sys
 
-API = IQ_Option("tonnylson.chad@gmail.com", "pass")
+API = IQ_Option("patcharapon.big@gmail.com", "Deathnote1#")
 
-API.set_max_reconnect(3) # Valor negativo irá deixar o numero máximo de reconexões infinito(cuidado)!
+API.set_max_reconnect(9) # Negative value will leave the maximum number of connections infinite (careful)!
 ATIVOS = API.get_all_open_time()
 
 API.change_balance('PRACTICE')
 
 PAYOUT = 50
 MARTINGALE = 2
-MERCADO = 0
-ENTRADA = 0
+MERCADO = 0 # MARKETPLACE
+ENTRADA = 0 # PROHIBITED
 OPCAO = "Binarias"
 def profile():
     prof = json.loads(json.dumps(API.get_profile()))
@@ -23,9 +23,9 @@ def profile():
 
 def getData(): 
     x = profile()
-    print('>>>>>CONTA: ', x['name'])
-    print('>>>>>NICK: ', x['nickname'])
-    print('>>>>>SALDO: '+ str(API.get_balance())+'$')
+    print('>>>>>ACCOUNT: ', x['name'])
+    print('>>>>>NICKNAME: ', x['nickname'])
+    print('>>>>>BALANCE: '+ str(API.get_balance())+'$')
 
     menu()
 
@@ -35,17 +35,17 @@ def menu():
     ans=True
     while ans:
         print("""==========================MENU============================
-        1.Mercado Normal
-        2.Mercado OTC
+        1.Normal market
+        2.OTC market
         4.Exit/Quit
         """)
-        ans = input("Selecione O mercado Desejado: ")
+        ans = input("Select Target Market: ")
         if ans=="1":
-          print("\n ==>Escolheu Mercado Normal")
+          print("\n ==>Chose Normal Market")
           MERCADO = 1
           typeOptions()
         elif ans=="2":
-          print("\n ==>Escolheu Mercado OTC")
+          print("\n ==>Chose OTC Market")
           MERCADO = 2
           typeOptions()
         elif ans=="4":
@@ -53,19 +53,19 @@ def menu():
           exit()
           ans = None
         else:
-           print("\n Opcao Invelida")
+           print("\n Invalid option")
 
 def typeOptions():
     global OPCAO
     ans1=True
     while ans1:
         print("""==========================OPC=============================
-        1.Opcoes Binarias
-        2.Opcoes Digitais
+        1.Binary Options
+        2.Digital Options
         """)
-        ans1 = input("Selecione tipo de Opcao desejado: ")
+        ans1 = input("Select desired option type: ")
         if ans1=="1":
-          print("\n ==>Binarias<==")
+          print("\n ==>Binaries<==")
           OPCAO = "Binarias"
           config()
         elif ans1=="2":
@@ -73,13 +73,13 @@ def typeOptions():
           OPCAO = "Digital"
           config()
         else:
-           print("\n Opcao Invelida")
+           print("\n Invalid option")
 
 def config():
     global ENTRADA
     global PAYOUT
-    PAYOUT = input("Digite o PAYOUT minimo: ")
-    ENTRADA = input("Digite a entrada das suas operacoes: ")
+    PAYOUT = input("Enter the minimum PAYOUT: ")
+    ENTRADA = input("Enter your operations entry: ")
 
     if MERCADO == 1:
          print("MERCADO NORMAL")
@@ -88,12 +88,12 @@ def config():
          
    
     print("PAYOUT: ", PAYOUT,"%")
-    print("Entrada: ", ENTRADA)
+    print("Prohibited: ", ENTRADA)
     print("==========================================================")
 
-    op = input("""Confirma os Dados?
-                    S- Sim
-                    N-Nao
+    op = input("""Confirm Data?
+                    S- Yes
+                    N-No
                 """)
     if op.lower() == "s":
        start()
@@ -119,14 +119,14 @@ def buyDigitalListFile(Entrada,Paridade,Direcao,Duracao,Hora):
     global PAYOUT
     global MARTINGALE
 
-    print('=================================OPERANDO==================================')
-    print('Activo= '+Paridade+' Entrada='+str(Entrada)+'$ Opcao= '+Direcao+' Duracao= '+str(Duracao)+'M')
+    print('=================================OPERATING==================================')
+    print('Active= '+Paridade+' Prohibited='+str(Entrada)+'$ Option= '+Direcao+' Duracao= '+str(Duracao)+'M')
 
     ganhou = False
 
     #checa se ainda esta dentro da Hora
     if time_sec_now > Hora:
-        print('+++++++++++++++SINAL EXPIRADO++++++++++++++')
+        print('+++++++++++++++EXPIRED SIGN++++++++++++++')
     else:
 
         API.subscribe_strike_list(Paridade, int(Duracao))
@@ -150,7 +150,7 @@ def buyDigitalListFile(Entrada,Paridade,Direcao,Duracao,Hora):
                             if status == True:
                                 break
                         if lucro < 0:
-                            print("Voce perdeu "+str(lucro)+"$")
+                            print("You lost "+str(lucro)+"$")
                             
                             gale = 1
                             #MARTINGALE
@@ -171,27 +171,27 @@ def buyDigitalListFile(Entrada,Paridade,Direcao,Duracao,Hora):
                                         if status == True:
                                             break
                                     if lucroM < 0:
-                                        print("Perdeu o ",gale,"º MARTINGALE"+str(lucroM)+"$ OTC")
+                                        print("lost the ",gale,"º MARTINGALE"+str(lucroM)+"$ OTC")
                                         MARTINGALE = MARTINGALE - 1
                                         gale = gale + 1
                                         if gale == 2:
                                             print('___________________________________________________________________________')
                                         
                                     else:
-                                        print("Voce ganhou "+str(lucroM)+"$ NO",gale," MARTINGALE")
+                                        print("You won "+str(lucroM)+"$ NO",gale," MARTINGALE")
                                         print('===========================================================================')
                                         ganhou = True
                         else:
-                            print("Voce ganhou "+str(lucro)+"$")
+                            print("You won "+str(lucro)+"$")
                             print('===========================================================================')
                             ganhou = True
                     else:
-                        print("Por favor, tente novamente: "+id)
+                        print("Please try again: "+id)
                         print('===========================================================================')
 
                         # Fim IF
                 else:
-                    print('NAO OPERAVEL '+str(PAYOUT))
+                    print('NOT OPERABLE '+str(PAYOUT))
                     
             time.sleep(1)   
 
